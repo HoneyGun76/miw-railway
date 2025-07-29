@@ -312,6 +312,12 @@ require_once 'config.php';
                     <p>Heroku environment details, PHP configuration, and system performance metrics.</p>
                     <a href="deploy_debug.php" class="btn btn-secondary" target="_blank">System Info</a>
                 </div>
+                
+                <div class="testing-card">
+                    <h3>🚀 Comprehensive Test Runner</h3>
+                    <p>Automated execution of all testing suites with failure detection and detailed reporting for troubleshooting.</p>
+                    <a href="comprehensive_test_runner.php" class="btn btn-success" target="_blank">Run All Tests</a>
+                </div>
             </div>
             
             <div class="manual-testing">
