@@ -27,11 +27,15 @@ function miwErrorHandler($errno, $errstr, $errfile, $errline) {
         E_USER_ERROR => 'User Error',
         E_USER_WARNING => 'User Warning',
         E_USER_NOTICE => 'User Notice',
-        E_STRICT => 'Strict Notice',
         E_RECOVERABLE_ERROR => 'Recoverable Error',
         E_DEPRECATED => 'Deprecated',
         E_USER_DEPRECATED => 'User Deprecated'
     ];
+    
+    // Add E_STRICT only if it's defined (for PHP < 8.4 compatibility)
+    if (defined('E_STRICT')) {
+        $errorTypes[E_STRICT] = 'Strict Notice';
+    }
     
     $errorType = $errorTypes[$errno] ?? 'Unknown Error';
     
