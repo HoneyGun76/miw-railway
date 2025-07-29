@@ -26,7 +26,7 @@
 <p>This form will test the confirm_payment.php endpoint with realistic data</p>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<div class='result'>";
     echo "<h3>📤 Form Submitted - Testing confirm_payment.php</h3>";
     
