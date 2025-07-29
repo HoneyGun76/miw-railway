@@ -36,7 +36,7 @@ try {
     
     foreach ($statements as $statement) {
         try {
-            $pdo->exec($statement);
+            $conn->exec($statement);
             $success_count++;
             echo ".";
         } catch (PDOException $e) {

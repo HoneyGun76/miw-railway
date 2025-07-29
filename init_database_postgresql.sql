@@ -159,7 +159,7 @@ BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 -- Create triggers for auto-updating updated_at columns
 CREATE TRIGGER update_data_paket_updated_at 
@@ -174,15 +174,7 @@ CREATE TRIGGER update_data_pembatalan_updated_at
     BEFORE UPDATE ON data_pembatalan 
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert sample data for testing (optional)
--- You can uncomment these inserts for testing purposes
-
-/*
+-- Insert sample data for testing
 INSERT INTO data_paket (jenis_paket, currency, program_pilihan, tanggal_keberangkatan, base_price_quad, base_price_triple, base_price_double, hotel_medinah, hotel_makkah, additional_hotels, room_numbers, hcn) VALUES
 ('Umroh', 'IDR', 'UMRAH AGUSTUS SAFAR MUBARAK GOLD', '2025-08-10', 32500000.00, 34000000.00, 36500000.00, 'Al Anshor Golden Tulip', 'Hilton Convention', '[]', 'Q1,Q2,Q3,Q4,T1,T2,D1,D2', '{"medinah":"Medinah-Testing-1","makkah":"Makkah-Testing-1","additional":[],"issued_date":"2025-12-31","expiry_date":"2025-12-31"}'),
-('Haji', 'USD', 'Haji Signature 2026', '2026-06-12', 16000.00, 18500.00, 21000.00, 'Hotel Medinah Suites', 'Hilton Convention', '[]', 'Q1,Q2,Q3,Q4,T1,T2,D1', '{"medinah":"MAD-3209674-3245-325643","makkah":"MAK-32525-43654-324","additional":[],"issued_date":"2026-07-12","expiry_date":"2026-07-23"}');
-*/
-
--- Grant permissions (if needed)
--- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO your_user;
--- GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO your_user;
+('Haji', 'USD', 'Haji Signature 2026', '2026-06-12', 16000.00, 18500.00, 21000.00, 'Hotel Medinah Suites', 'Hilton Convention', '[]', 'Q1,Q2,Q3,Q4,T1,T2,D1', '{"medinah":"MAD-3209674-3245-325643","makkah":"MAK-32525-43654-324","additional":[],"issued_date":"2026-07-12","expiry_date":"2026-07-23"}')

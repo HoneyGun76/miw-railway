@@ -24,7 +24,7 @@
             "chmod -R 777 /tmp/miw_uploads"
         ],
         "compile": [
-            "php init_database.php"
+            "php init_db_heroku.php"
         ]
     }
 }
