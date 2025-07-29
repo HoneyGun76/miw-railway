@@ -30,18 +30,30 @@ class HerokuFileManager {
             $this->uploadBaseDir,
             $this->uploadBaseDir . '/documents',
             $this->uploadBaseDir . '/payments',
-            $this->uploadBaseDir . '/cancellations'
+            $this->uploadBaseDir . '/cancellations',
+            $this->uploadBaseDir . '/photos'
         ];
         
         foreach ($directories as $dir) {
             if (!file_exists($dir)) {
-                mkdir($dir, 0755, true);
+                $created = mkdir($dir, 0755, true);
+                if (!$created) {
+                    error_log("HerokuFileManager: Failed to create directory: {$dir}");
+                } else {
+                    error_log("HerokuFileManager: Created directory: {$dir}");
+                }
             }
             
             // Create .htaccess for security
             $htaccessFile = $dir . '/.htaccess';
             if (!file_exists($htaccessFile)) {
                 file_put_contents($htaccessFile, "Order deny,allow\nDeny from all\n");
+            }
+            
+            // Create index.php for security
+            $indexFile = $dir . '/index.php';
+            if (!file_exists($indexFile)) {
+                file_put_contents($indexFile, "<?php exit('Access denied'); ?>");
             }
         }
     }
@@ -69,7 +81,11 @@ class HerokuFileManager {
             // Create target directory
             $targetPath = $this->uploadBaseDir . '/' . trim($targetDir, '/');
             if (!file_exists($targetPath)) {
-                mkdir($targetPath, 0755, true);
+                $created = mkdir($targetPath, 0755, true);
+                if (!$created) {
+                    throw new Exception("Failed to create target directory: {$targetPath}");
+                }
+                error_log("HerokuFileManager: Created target directory: {$targetPath}");
             }
             
             // Get file extension

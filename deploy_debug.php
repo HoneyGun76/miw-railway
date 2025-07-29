@@ -222,11 +222,16 @@
                             <?php 
                             $directories = [
                                 '/tmp' => 'Temp Directory',
-                                '/tmp/miw_uploads' => 'Upload Directory',
-                                '/tmp/miw_uploads/documents' => 'Documents',
-                                '/tmp/miw_uploads/payments' => 'Payments',
-                                '/tmp/miw_uploads/photos' => 'Photos',
-                                getcwd() => 'Current Directory'
+                                '/tmp/uploads' => 'Main Upload Directory (Heroku)',
+                                '/tmp/uploads/documents' => 'Documents Directory',
+                                '/tmp/uploads/payments' => 'Payments Directory',
+                                '/tmp/uploads/cancellations' => 'Cancellations Directory',
+                                '/tmp/miw_uploads' => 'Legacy Upload Directory',
+                                '/tmp/miw_uploads/documents' => 'Legacy Documents',
+                                '/tmp/miw_uploads/payments' => 'Legacy Payments',
+                                '/tmp/miw_uploads/photos' => 'Legacy Photos',
+                                getcwd() => 'Current Directory',
+                                getcwd() . '/uploads' => 'Local Upload Directory'
                             ];
                             
                             foreach ($directories as $dir => $description) {

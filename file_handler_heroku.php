@@ -10,7 +10,7 @@ class HerokuFileHandler {
     private $allowed_types;
     
     public function __construct() {
-        $this->temp_dir = sys_get_temp_dir() . '/miw_uploads';
+        $this->temp_dir = sys_get_temp_dir() . '/uploads';
         $this->max_file_size = 10 * 1024 * 1024; // 10MB
         $this->allowed_types = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
         
@@ -24,7 +24,7 @@ class HerokuFileHandler {
         }
         
         // Create subdirectories
-        $subdirs = ['documents', 'payments', 'photos'];
+        $subdirs = ['documents', 'payments', 'cancellations', 'photos'];
         foreach ($subdirs as $subdir) {
             $path = $this->temp_dir . '/' . $subdir;
             if (!is_dir($path)) {
@@ -60,7 +60,7 @@ class HerokuFileHandler {
         }
         
         // Return relative path for database storage
-        return '/tmp/miw_uploads/' . $type . '/' . $filename;
+        return '/tmp/uploads/' . $type . '/' . $filename;
     }
     
     public function getFile($path) {

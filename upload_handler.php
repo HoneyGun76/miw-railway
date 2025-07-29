@@ -35,12 +35,29 @@ class UploadHandler {
             $this->uploadBaseDir,
             $this->uploadBaseDir . '/documents',
             $this->uploadBaseDir . '/payments',
-            $this->uploadBaseDir . '/cancellations'
+            $this->uploadBaseDir . '/cancellations',
+            $this->uploadBaseDir . '/photos'
         ];
         
         foreach ($directories as $dir) {
             if (!file_exists($dir)) {
-                mkdir($dir, 0755, true);
+                $created = mkdir($dir, 0755, true);
+                if (!$created) {
+                    error_log("Failed to create upload directory: {$dir}");
+                } else {
+                    error_log("Created upload directory: {$dir}");
+                }
+            }
+            
+            // Create security files
+            $htaccessFile = $dir . '/.htaccess';
+            if (!file_exists($htaccessFile)) {
+                file_put_contents($htaccessFile, "Order deny,allow\nDeny from all\n");
+            }
+            
+            $indexFile = $dir . '/index.php';
+            if (!file_exists($indexFile)) {
+                file_put_contents($indexFile, "<?php exit('Access denied'); ?>");
             }
         }
     }
