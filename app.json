@@ -2,9 +2,9 @@
   "name": "MIW Travel Management System",
   "description": "Complete travel management system for Haji and Umroh packages with customer registration, document management, and admin dashboard.",
   "keywords": ["php", "travel", "haji", "umroh", "management"],
-  "website": "https://miw-travel-app-576ab80a8cab.herokuapp.com",
+  "website": "https://miw-travel-app.herokuapp.com",
   "repository": "https://github.com/takaruma7/miw",
-  "logo": "https://miw-travel-app-576ab80a8cab.herokuapp.com/miw_logo.png",
+  "logo": "https://miw-travel-app.herokuapp.com/miw_logo.png",
   "success_url": "/",
   "env": {
     "DATABASE_URL": {

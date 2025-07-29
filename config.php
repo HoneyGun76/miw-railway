@@ -18,6 +18,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0); // Hide errors in production
 ini_set('log_errors', 1);
 
+// Include custom error handler for logging
+require_once __DIR__ . '/error_handler.php';
+
 // Initialize configuration variables
 $db_config = [];
 $pdo = null;
