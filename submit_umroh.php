@@ -81,6 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Prepare data for database
             $currentDateTime = date('Y-m-d H:i:s');
+            
+            // Helper function to convert empty strings to null for integer fields
+            $intOrNull = function($value) {
+                return (empty($value) || $value === '') ? null : (int)$value;
+            };
+            
             $data = [
                 'nik' => $_POST['nik'],
                 'nama' => $_POST['nama'],
@@ -91,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'kode_pos' => $_POST['kode_pos'] ?? null,
                 'email' => $_POST['email'],
                 'no_telp' => $_POST['no_telp'],
-                'tinggi_badan' => $_POST['tinggi_badan'] ?? null,
-                'berat_badan' => $_POST['berat_badan'] ?? null,
+                'tinggi_badan' => $intOrNull($_POST['tinggi_badan'] ?? ''),
+                'berat_badan' => $intOrNull($_POST['berat_badan'] ?? ''),
                 'nama_ayah' => $_POST['nama_ayah'],
                 'nama_ibu' => $_POST['nama_ibu'],
                 'emergency_nama' => $_POST['emergency_nama'] ?? null,
@@ -112,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'marketing_hp' => $_POST['marketing_hp'] ?? null,
                 'marketing_type' => $_POST['marketing_type'] ?? null,
                 'request_khusus' => $_POST['request_khusus'] ?? null,
-                'pak_id' => $_POST['pak_id'],
+                'pak_id' => $intOrNull($_POST['pak_id']),
                 'type_room_pilihan' => $_POST['type_room_pilihan'],
                 'created_at' => $currentDateTime,
                 'updated_at' => $currentDateTime,
@@ -164,12 +170,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (PDOException $e) {
         $conn->rollBack();
-        $errors[] = "Database error: " . $e->getMessage();
-        error_log("Database error: " . $e->getMessage());
+        $errorMsg = "Database error: " . $e->getMessage();
+        $errors[] = $errorMsg;
+        
+        // Log detailed error information
+        logError('database_error', $errorMsg, [
+            'file' => 'submit_umroh.php',
+            'nik' => $_POST['nik'] ?? 'unknown',
+            'pak_id' => $_POST['pak_id'] ?? 'unknown',
+            'tinggi_badan' => $_POST['tinggi_badan'] ?? 'empty',
+            'berat_badan' => $_POST['berat_badan'] ?? 'empty'
+        ]);
+        
+        error_log("Database error in submit_umroh.php: " . $e->getMessage());
     } catch (Exception $e) {
         $conn->rollBack();
-        $errors[] = $e->getMessage();
-        error_log("Error: " . $e->getMessage());
+        $errorMsg = $e->getMessage();
+        $errors[] = $errorMsg;
+        
+        // Log general error
+        logError('general_error', $errorMsg, [
+            'file' => 'submit_umroh.php',
+            'nik' => $_POST['nik'] ?? 'unknown'
+        ]);
+        
+        error_log("Error in submit_umroh.php: " . $e->getMessage());
     }
 }
 
