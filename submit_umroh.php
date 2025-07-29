@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Helper function to convert empty strings to null for integer fields
             $intOrNull = function($value) {
-                return (empty($value) || $value === '') ? null : (int)$value;
+                return ($value === '' || $value === null) ? null : (int)$value;
             };
             
             $data = [
