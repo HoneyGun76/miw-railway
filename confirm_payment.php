@@ -121,6 +121,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'upload_handler.php';
         logDetailedError("Upload handler loaded");
         
+        // Ensure upload directory exists
+        $uploadDir = getUploadDirectory();
+        ensureUploadDirectory();
+        if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
+            logDetailedError("Upload directory issue", [
+                'directory' => $uploadDir,
+                'exists' => is_dir($uploadDir),
+                'writable' => is_writable($uploadDir)
+            ]);
+            throw new Exception("Upload directory is not available: " . $uploadDir);
+        }
+        logDetailedError("Upload directory validated", ['directory' => $uploadDir]);
+        
         try {
             $uploadHandler = new UploadHandler();
             logDetailedError("UploadHandler instantiated successfully");

@@ -1,7 +1,11 @@
 <?php
 /**
  * Comprehensive Testing Suite for MIW Travel Forms
- * Tests both Haji and Umroh forms with white box and black box testing approaches
+ * Tests both Haji and Umroh forms with white box and        foreach ($testCases as $test) {
+            $result = $this->validateInput($test);
+            $status = ($result === $test['expected']) ? "PASS" : "FAIL";
+            $this->logResult($test['description'], $status, "Expected: {$test['expected']}, Got: $result");
+        }k box testing approaches
  */
 
 require_once 'config.php';

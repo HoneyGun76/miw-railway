@@ -46,6 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         echo "<h4>Processing Results:</h4>";
         
+        // Check upload directory first
+        $uploadDir = getUploadDirectory();
+        ensureUploadDirectory(); // Create if doesn't exist
+        if (is_dir($uploadDir) && is_writable($uploadDir)) {
+            echo "<div class='success'>✅ Upload Directory: OK ({$uploadDir})</div>";
+        } else {
+            echo "<div class='error'>❌ Upload Directory: missing or not writable ({$uploadDir})</div>";
+        }
+        
         // Check required fields
         $requiredFields = ['nik', 'transfer_account_name', 'nama', 'program_pilihan'];
         $missing = [];

@@ -314,7 +314,19 @@ require_once 'config.php';
                 </div>
                 
                 <div class="testing-card">
-                    <h3>🚀 Comprehensive Test Runner</h3>
+                    <h3>� Payment Flow Diagnostics</h3>
+                    <p>Deep diagnostic tools for payment confirmation flow, session management, and email functionality.</p>
+                    <a href="confirm_payment_diagnostic.php" class="btn btn-info" target="_blank">Payment Diagnostics</a>
+                </div>
+                
+                <div class="testing-card">
+                    <h3>🔄 Payment Flow Test</h3>
+                    <p>Simulates the complete payment flow from form submission to confirmation with detailed validation.</p>
+                    <a href="confirm_payment_flow_test.php" class="btn btn-info" target="_blank">Test Payment Flow</a>
+                </div>
+                
+                <div class="testing-card">
+                    <h3>�🚀 Comprehensive Test Runner</h3>
                     <p>Automated execution of all testing suites with failure detection and detailed reporting for troubleshooting.</p>
                     <a href="comprehensive_test_runner.php" class="btn btn-success" target="_blank">Run All Tests</a>
                 </div>

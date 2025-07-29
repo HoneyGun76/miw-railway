@@ -49,10 +49,21 @@ try {
     echo ($hajiCount > 0 ? '✅' : '❌') . " Haji Packages: {$hajiCount} found</div>";
     
     // Check upload directory
-    $uploadDir = '/tmp/miw_uploads';
+    $uploadDir = getUploadDirectory();
+    ensureUploadDirectory(); // This creates the directory if it doesn't exist
     $dirExists = is_dir($uploadDir);
     echo "<div class='test-result " . ($dirExists ? 'pass' : 'fail') . "'>";
-    echo ($dirExists ? '✅' : '❌') . " Upload Directory: " . ($dirExists ? 'exists' : 'missing') . "</div>";
+    echo ($dirExists ? '✅' : '❌') . " Upload Directory: " . ($dirExists ? 'exists' : 'missing') . " ({$uploadDir})</div>";
+    
+    if (!$dirExists) {
+        echo "<div class='test-result info'>🔧 Attempting to create upload directory...</div>";
+        try {
+            mkdir($uploadDir, 0777, true);
+            echo "<div class='test-result pass'>✅ Upload directory created successfully</div>";
+        } catch (Exception $e) {
+            echo "<div class='test-result fail'>❌ Failed to create upload directory: " . htmlspecialchars($e->getMessage()) . "</div>";
+        }
+    }
     
     // Check email function
     $emailExists = function_exists('sendPaymentConfirmationEmail');

@@ -106,7 +106,7 @@ CREATE TABLE data_jamaah (
     payment_date DATE,
     payment_type VARCHAR(10) CHECK (payment_type IN ('DP', 'Pelunasan')),
     payment_method VARCHAR(10) CHECK (payment_method IN ('BSI', 'BNI', 'Mandiri')),
-    payment_status VARCHAR(10) CHECK (payment_status IN ('pending', 'verified', 'rejected')),
+    payment_status VARCHAR(25) CHECK (payment_status IN ('pending', 'verified', 'rejected', 'confirmation_submitted')),
     payment_path VARCHAR(255),
     payment_total DECIMAL(15,2),
     payment_remaining DECIMAL(15,2),
