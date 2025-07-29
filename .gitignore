@@ -1,0 +1,79 @@
+# MIW Travel - Git Ignore Configuration
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local development files
+.env
+config.local.php
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.log
+temp_*.html
+*_backup.*
+backup_sql/*.sql
+*.rar
+*.zip
+
+# Upload directories (contains user data)
+uploads/
+documents/
+payments/
+
+# Composer
+vendor/autoload.php
+
+# Cache and logs
+cache/
+logs/
+*.log
+
+# Database files
+*.sqlite
+*.db
+
+# Development and testing files
+test/
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Documentation source files
+docs/source/
+
+# Deployment specific
+.git-ftp-log
+.git-ftp-include
+.git-ftp-ignore
+
+# Node.js (if using any frontend build tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+
+# Local configuration overrides
+config_local.php
+config.dev.php
+
+# Heroku local
+.env.local
