@@ -1,0 +1,62 @@
+# Railway deployment ignore file
+# Only include essential production files
+
+# Development and testing files
+*test*.php
+*Test*.php
+*_test*
+*_testing*
+*diagnostic*
+*debug*
+black_box_testing.php
+comprehensive_*.php
+manual_form_test.php
+end_to_end_testing.php
+testing_dashboard.php
+latest_test_results.txt
+test_results.txt
+
+# Development tools and scripts
+*.bat
+*.sh
+deploy_*
+railway_manager.*
+railway_deployment_guide.md
+admin_device_storage_solution.php
+fix_*.php
+cleanup_*.php
+comprehensive_fix.php
+
+# Legacy Heroku files
+Procfile
+config.heroku.php
+heroku_*
+deploy_heroku.*
+
+# Documentation and markdown
+*.md
+README.md
+ISSUE_RESOLUTION_SUMMARY.md
+UPLOAD_INVESTIGATION_REPORT.md
+
+# Development directories
+.vscode/
+backup_sql/
+uploads/
+vendor/composer/
+
+# Large binary files
+*.jpg
+*.png
+*.xlsx
+*.rar
+*.zip
+
+# IDE and OS files
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environment files (use Railway dashboard instead)
+.env
+.env.*
