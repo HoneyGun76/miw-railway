@@ -1,7 +1,7 @@
 <?php
 /**
  * Deploy Debug Information
- * System information and deployment diagnostics for Heroku environment
+ * System information and deployment diagnostics for Railway environment
  */
 
 ?>
@@ -170,18 +170,17 @@
                 <h3>🌍 Environment Variables</h3>
                 <div class="info-grid">
                     <div class="info-card">
-                        <h4>Heroku Environment</h4>
+                        <h4>Railway Environment</h4>
                         <table class="data-table">
                             <tr><th>Variable</th><th>Value</th></tr>
                             <?php 
                             $env_vars = [
-                                'DYNO' => 'Dyno Type',
+                                'RAILWAY_ENVIRONMENT' => 'Environment',
                                 'PORT' => 'Port',
-                                'WEB_CONCURRENCY' => 'Web Concurrency',
                                 'DATABASE_URL' => 'Database URL (masked)',
-                                'HEROKU_APP_NAME' => 'App Name',
-                                'HEROKU_SLUG_COMMIT' => 'Git Commit',
-                                'HEROKU_RELEASE_VERSION' => 'Release Version'
+                                'RAILWAY_PROJECT_ID' => 'Project ID',
+                                'RAILWAY_SERVICE_NAME' => 'Service Name',
+                                'RAILWAY_GIT_COMMIT_SHA' => 'Git Commit'
                             ];
                             
                             foreach ($env_vars as $var => $description) {
@@ -222,7 +221,7 @@
                             <?php 
                             $directories = [
                                 '/tmp' => 'Temp Directory',
-                                '/tmp/uploads' => 'Main Upload Directory (Heroku)',
+                                '/tmp/uploads' => 'Main Upload Directory (Railway)',
                                 '/tmp/uploads/documents' => 'Documents Directory',
                                 '/tmp/uploads/payments' => 'Payments Directory',
                                 '/tmp/uploads/cancellations' => 'Cancellations Directory',

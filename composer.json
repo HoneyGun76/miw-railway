@@ -22,9 +22,6 @@
             "mkdir -p /tmp/miw_uploads/payments", 
             "mkdir -p /tmp/miw_uploads/photos",
             "chmod -R 777 /tmp/miw_uploads"
-        ],
-        "compile": [
-            "php init_db_heroku.php"
         ]
     }
 }

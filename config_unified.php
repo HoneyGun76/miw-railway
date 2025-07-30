@@ -331,6 +331,13 @@ if (!defined('DB_HOST')) {
     define('DB_PASS', $db_config['password'] ?? '');
 }
 
+/**
+ * Check if running on Railway
+ */
+function isRailway() {
+    return !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+}
+
 // Environment indicator for debugging
 if (!isProduction()) {
     error_log("MIW Config: Environment = " . getCurrentEnvironment() . ", Database = " . getDatabaseType());

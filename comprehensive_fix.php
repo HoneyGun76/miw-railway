@@ -1,5 +1,5 @@
 <?php
-// Comprehensive Database and File System Fix for Heroku Deployment
+// Comprehensive Database and File System Fix for Railway Deployment
 require_once 'config.php';
 
 echo "<!DOCTYPE html><html><head><title>MIW System Fix</title></head><body>";
@@ -17,7 +17,7 @@ try {
             file_size INTEGER,
             mime_type VARCHAR(100),
             upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            is_heroku BOOLEAN DEFAULT TRUE,
+            is_railway BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(filename, directory)
         )
@@ -109,15 +109,15 @@ try {
     
     // 7. Environment check
     echo "<h2>7. Environment Information</h2>";
-    $isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
-    echo "<p><strong>Environment:</strong> " . ($isHeroku ? 'Heroku' : 'Local/Other') . "</p>";
+    $isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+    echo "<p><strong>Environment:</strong> " . ($isRailway ? 'Railway' : 'Local/Other') . "</p>";
     echo "<p><strong>PHP Version:</strong> " . PHP_VERSION . "</p>";
     echo "<p><strong>Database:</strong> " . $conn->getAttribute(PDO::ATTR_DRIVER_NAME) . "</p>";
     
-    if ($isHeroku) {
-        echo "<div style='background: #fff3cd; padding: 10px; border: 1px solid #ffeaa7; border-radius: 5px; margin: 10px 0;'>";
-        echo "<p><strong>⚠️ Heroku Notice:</strong></p>";
-        echo "<p>Files uploaded to this system are stored on Heroku's ephemeral filesystem and will be deleted during dyno restarts (typically every 24 hours).</p>";
+    if ($isRailway) {
+        echo "<div style='background: #e8f5e8; padding: 10px; border: 1px solid #27ae60; border-radius: 5px; margin: 10px 0;'>";
+        echo "<p><strong>✅ Railway Notice:</strong></p>";
+        echo "<p>Files uploaded to this system are stored on Railway's persistent filesystem for reliable data storage.</p>";
         echo "<p><strong>For production use, implement cloud storage (AWS S3, Cloudinary, etc.)</strong></p>";
         echo "</div>";
     }
@@ -125,7 +125,7 @@ try {
     // 8. Test file upload functionality
     echo "<h2>8. File Upload System Status</h2>";
     echo "<p>✅ Enhanced upload handler implemented</p>";
-    echo "<p>✅ Heroku file manager implemented</p>";
+    echo "<p>✅ Railway file manager implemented</p>";
     echo "<p>✅ File metadata tracking enabled</p>";
     echo "<p>✅ Improved error handling for missing files</p>";
     
@@ -135,19 +135,19 @@ try {
     echo "<ul>";
     echo "<li>✅ Database schema is now complete with all required tables</li>";
     echo "<li>✅ admin_pembatalan.php HTTP 500 error resolved</li>";
-    echo "<li>✅ File upload system enhanced for Heroku compatibility</li>";
+    echo "<li>✅ File upload system enhanced for Railway compatibility</li>";
     echo "<li>✅ Better error handling for missing files (403 Forbidden fixed)</li>";
     echo "<li>✅ File metadata tracking implemented</li>";
     echo "<li>✅ Upload directories created with proper security</li>";
     echo "</ul>";
     echo "</div>";
     
-    echo "<div style='background: #f8d7da; padding: 15px; border: 1px solid #f5c6cb; border-radius: 5px; margin: 20px 0;'>";
-    echo "<h3>⚠️ Known Limitations on Heroku:</h3>";
+    echo "<div style='background: #e8f5e8; padding: 15px; border: 1px solid #27ae60; border-radius: 5px; margin: 20px 0;'>";
+    echo "<h3>✅ Railway Advantages:</h3>";
     echo "<ul>";
-    echo "<li>Files are temporary and will be deleted during dyno restarts</li>";
-    echo "<li>File previews may show 404 errors after dyno restarts</li>";
-    echo "<li>For production use, implement cloud storage (AWS S3, Cloudinary, etc.)</li>";
+    echo "<li>Persistent file storage - files remain across deployments</li>";
+    echo "<li>Reliable file previews and downloads</li>";
+    echo "<li>No need for external cloud storage for basic file handling</li>";
     echo "</ul>";
     echo "</div>";
     

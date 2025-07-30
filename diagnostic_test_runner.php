@@ -43,9 +43,9 @@ class DiagnosticTestRunner {
     private function checkEnvironment() {
         echo "<h2>🌍 Environment Check</h2>";
         
-        // Check if on Heroku
-        $isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
-        $this->logResult("Environment Detection", $isHeroku ? "Heroku Production" : "Local Development", "INFO");
+        // Check if on Railway
+        $isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+        $this->logResult("Environment Detection", $isRailway ? "Railway Production" : "Local Development", "INFO");
         
         // Check PHP version
         $phpVersion = phpversion();

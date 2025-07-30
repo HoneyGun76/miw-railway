@@ -9,13 +9,13 @@
 require_once 'config.php';
 
 class UploadDirectoryInitializer {
-    private $isHeroku;
+    private $isRailway;
     private $uploadBaseDir;
     private $results = [];
     
     public function __construct() {
-        $this->isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
-        $this->uploadBaseDir = $this->isHeroku ? '/tmp/uploads' : __DIR__ . '/uploads';
+        $this->isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+        $this->uploadBaseDir = '/tmp/uploads';
     }
     
     public function initializeDirectories() {
@@ -35,7 +35,7 @@ class UploadDirectoryInitializer {
         
         echo "<div class='container'>";
         echo "<h1>🚀 MIW Upload Directory Initialization</h1>";
-        echo "<p><strong>Environment:</strong> " . ($this->isHeroku ? 'Heroku Production' : 'Local Development') . "</p>";
+        echo "<p><strong>Environment:</strong> " . ($this->isRailway ? 'Railway Production' : 'Local Development') . "</p>";
         echo "<p><strong>Date:</strong> " . date('Y-m-d H:i:s T') . "</p>";
         
         // Step 1: Check current environment
@@ -278,16 +278,16 @@ class UploadDirectoryInitializer {
         echo "<li>Test file uploads via form submissions</li>";
         echo "<li>Monitor error_logger.php for any upload issues</li>";
         echo "<li>Run testing_dashboard.php to validate all upload workflows</li>";
-        echo "<li>Check deploy_debug.php to verify directory status on Heroku</li>";
+        echo "<li>Check deploy_debug.php to verify directory status on Railway</li>";
         echo "</ol>";
         
-        if ($this->isHeroku) {
-            echo "<div class='warning'>";
-            echo "<h4>⚠️ Heroku Important Notes:</h4>";
+        if ($this->isRailway) {
+            echo "<div class='success'>";
+            echo "<h4>✅ Railway Storage Benefits:</h4>";
             echo "<ul>";
-            echo "<li>Files are stored on ephemeral filesystem and will be deleted during dyno restarts</li>";
-            echo "<li>Consider implementing cloud storage (Cloudinary, AWS S3) for permanent storage</li>";
-            echo "<li>Files smaller than 1MB can be stored in PostgreSQL database as backup</li>";
+            echo "<li>Files are stored on persistent filesystem and persist across deployments</li>";
+            echo "<li>No need for external cloud storage for basic file operations</li>";
+            echo "<li>Reliable file serving and download functionality</li>";
             echo "<li>Monitor file storage and implement cleanup routines</li>";
             echo "</ul>";
             echo "</div>";

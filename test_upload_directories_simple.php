@@ -5,14 +5,14 @@
  */
 
 // Check if we're on Heroku
-$isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
-$uploadBaseDir = $isHeroku ? '/tmp/uploads' : __DIR__ . '/uploads';
+$isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+$uploadBaseDir = '/tmp/uploads';
 
 echo "<!DOCTYPE html><html><head><title>Upload Directory Test</title>";
 echo "<style>body{font-family:Arial,sans-serif;margin:20px;} .success{color:green;} .error{color:red;} .info{color:blue;}</style></head><body>";
 
 echo "<h1>🔧 Upload Directory Test</h1>";
-echo "<p><strong>Environment:</strong> " . ($isHeroku ? 'Heroku' : 'Local') . "</p>";
+echo "<p><strong>Environment:</strong> " . ($isRailway ? 'Railway' : 'Local') . "</p>";
 echo "<p><strong>Base Directory:</strong> {$uploadBaseDir}</p>";
 
 // Test directories

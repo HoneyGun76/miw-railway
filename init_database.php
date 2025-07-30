@@ -1,7 +1,7 @@
 <?php
 /**
- * Database Initialization Script for Heroku
- * This script initializes the PostgreSQL database schema
+ * Database Initialization Script for Railway
+ * This script initializes the MySQL database schema
  */
 
 // Load configuration

@@ -309,7 +309,7 @@ require_once 'config.php';
                 
                 <div class="testing-card">
                     <h3>📈 System Information</h3>
-                    <p>Heroku environment details, PHP configuration, and system performance metrics.</p>
+                    <p>Railway environment details, PHP configuration, and system performance metrics.</p>
                     <a href="deploy_debug.php" class="btn btn-secondary" target="_blank">System Info</a>
                 </div>
                 
@@ -421,7 +421,7 @@ require_once 'config.php';
         
         <div class="footer">
             <p>MIW Travel Forms Testing Dashboard | Last Updated: <?php echo date('Y-m-d H:i:s'); ?></p>
-            <p>Environment: Heroku Production | Database: PostgreSQL | PHP: <?php echo PHP_VERSION; ?></p>
+            <p>Environment: Railway Production | Database: MySQL | PHP: <?php echo PHP_VERSION; ?></p>
         </div>
     </div>
     

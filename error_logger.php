@@ -1,7 +1,7 @@
 <?php
 /**
- * MIW Error Logger - Heroku Log Viewer
- * Displays application errors and logs from Heroku deployment
+ * MIW Error Logger - Railway Log Viewer
+ * Displays application errors and logs from Railway deployment
  */
 
 session_start();
@@ -320,7 +320,7 @@ function logApplicationError($type, $message, $file = '', $line = 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIW Error Logger - Heroku Logs</title>
+    <title>MIW Error Logger - Railway Logs</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; color: #333; }
@@ -500,7 +500,7 @@ function logApplicationError($type, $message, $file = '', $line = 0) {
 <body>
     <div class="header">
         <h1>🔍 MIW Error Logger</h1>
-        <div class="subtitle">Heroku Application Monitoring & Error Tracking</div>
+        <div class="subtitle">Railway Application Monitoring & Error Tracking</div>
     </div>
     
     <div class="controls">

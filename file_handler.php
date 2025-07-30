@@ -1,7 +1,6 @@
 <?php
-// Heroku-compatible file handler with enhanced error handling
+// Railway-compatible file handler with enhanced error handling
 require_once 'config.php';
-require_once 'heroku_file_manager.php';
 
 // Validate request parameters
 if (!isset($_GET['file']) || !isset($_GET['type'])) {
@@ -20,7 +19,20 @@ if (!in_array($type, $validTypes)) {
     exit('Invalid file type');
 }
 
-// Use the enhanced Heroku file handler
-$fileHandler = new HerokuFileHandler();
-$fileHandler->serveFile($filename, $type, $action);
+// Use standard file serving for Railway deployment
+if (!file_exists($filename)) {
+    header('HTTP/1.0 404 Not Found');
+    exit('File not found');
+}
+
+// Serve the file
+if ($action === 'download') {
+    header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+} else {
+    header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+}
+
+header('Content-Type: ' . mime_content_type($filename));
+header('Content-Length: ' . filesize($filename));
+readfile($filename);
 ?>

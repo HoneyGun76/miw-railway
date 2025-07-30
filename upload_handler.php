@@ -3,25 +3,22 @@
  * Upload Handler for MIW Travel Management System
  * 
  * This class provides a unified interface for file uploads across different environments.
- * It uses HerokuFileManager for Heroku deployments and regular file handling for local development.
+ * It uses standard file handling optimized for Railway deployments.
  * 
  * @version 2.0.0
  * @author MIW Development Team
  */
 
 require_once 'config.php';
-require_once 'heroku_file_manager.php';
 
 class UploadHandler {
-    private $fileManager;
     private $errors = [];
-    private $isHeroku;
+    private $isRailway;
     private $uploadBaseDir;
     
     public function __construct() {
-        $this->isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
-        $this->fileManager = new HerokuFileManager();
-        $this->uploadBaseDir = $this->isHeroku ? '/tmp/uploads' : __DIR__ . '/uploads';
+        $this->isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
+        $this->uploadBaseDir = '/tmp/uploads';
         
         // Ensure upload directories exist
         $this->ensureDirectoriesExist();
@@ -103,13 +100,21 @@ class UploadHandler {
                 return false;
             }
             
-            // Use HerokuFileManager for actual upload
-            $result = $this->fileManager->handleUpload($file, $targetDir, $customName);
+            // Use standard file upload for Railway deployment
+            $targetPath = $targetDir . '/' . $finalFilename;
             
-            if (!$result['success']) {
-                $this->errors[] = $result['error'];
+            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                $this->errors[] = "Failed to move uploaded file to: " . $targetPath;
                 return false;
             }
+            
+            $result = [
+                'success' => true,
+                'filename' => $finalFilename,
+                'path' => $targetPath,
+                'size' => $file['size'],
+                'type' => $file['type']
+            ];
             
             return $result;
             
@@ -256,16 +261,20 @@ class UploadHandler {
     }
     
     /**
-     * Get Heroku warning if applicable
+     * Get Railway info
      * 
-     * @return array Warning info
+     * @return array Railway deployment info
      */
-    public function getHerokuWarning() {
-        return $this->fileManager->getHerokuWarning();
+    public function getRailwayInfo() {
+        return [
+            'platform' => 'Railway',
+            'persistent_storage' => true,
+            'message' => 'Files are stored persistently on Railway deployment'
+        ];
     }
     
     /**
-     * Clean up old files (for Heroku)
+     * Clean up old files (Railway deployment)
      * 
      * @param int $daysOld Number of days old files to clean
      */
@@ -280,11 +289,11 @@ class UploadHandler {
      */
     public function getUploadStats() {
         return [
-            'is_heroku' => $this->isHeroku,
+            'is_railway' => $this->isRailway,
             'upload_base_dir' => $this->uploadBaseDir,
             'max_file_size' => '2MB',
             'allowed_types' => ['JPG', 'PNG', 'PDF'],
-            'environment' => $this->isHeroku ? 'Heroku' : 'Local'
+            'environment' => $this->isRailway ? 'Railway' : 'Local'
         ];
     }
 }

@@ -10,12 +10,12 @@ require_once 'config.php';
 
 class AdminDeviceStorageManager {
     private $conn;
-    private $isHeroku;
+    private $isRailway;
     
     public function __construct() {
         global $conn;
         $this->conn = $conn;
-        $this->isHeroku = !empty($_ENV['DYNO']) || !empty(getenv('DYNO'));
+        $this->isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty(getenv('RAILWAY_ENVIRONMENT'));
     }
     
     /**

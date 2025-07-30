@@ -175,7 +175,7 @@ function getUploadErrorMessage($error) {
 </div>
 
 <div class='info'>
-    <p><strong>Environment:</strong> <?= isHeroku() ? 'Heroku Production' : 'Local Development' ?></p>
+    <p><strong>Environment:</strong> <?= isRailway() ? 'Railway Production' : 'Local Development' ?></p>
     <p><strong>Upload Directory:</strong> <?= $uploadDir ?></p>
     <p><strong>Test Time:</strong> <?= date('Y-m-d H:i:s T') ?></p>
 </div>
