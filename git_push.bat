@@ -1,27 +1,20 @@
 @echo off
-echo ====================================
-echo MIW Railway - Git Force Push Script
-echo ====================================
-echo.
-
-echo Checking git status...
-git status
-
-echo.
-echo Adding all changes...
+echo Staging changes...
 git add .
 
 echo.
+echo Enter your commit message:
+set /p commit_msg="> "
+
+echo.
 echo Committing changes...
-git commit -m "Force push: Updated MIW Railway codebase with diagnostic dashboard and unified config"
+git commit -m "%commit_msg%"
 
 echo.
-echo Force pushing to main branch...
-git push --force-with-lease origin main
+echo Force pushing to Railway...
+git push origin main --force
 
 echo.
-echo ====================================
-echo Git force push completed!
-echo ====================================
-echo.
+echo Done! Your changes are now live on Railway.
+echo Access diagnostic dashboard at your Railway URL + /diagnostic.php
 pause
