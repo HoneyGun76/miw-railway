@@ -1,18 +1,4 @@
 <?php
-require_once 'csrf_protection.php';
-require_once 'input_validator.php';
-require_once 'safe_config.php';
-
-// Start session for CSRF protection
-session_start();
-
-// CSRF Protection for POST requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!CSRFProtection::validateToken($_POST['csrf_token'] ?? '')) {
-        die('Invalid security token. Please refresh and try again.');
-    }
-}
-
 require_once 'config.php';
 require_once 'email_functions.php';
 

@@ -1,53 +1,42 @@
 <?php
 /**
- * Railway.com Configuration for MIW Travel System
+ * MIW Travel System - Smart Configuration
  * 
- * This configuration is optimized for Railway deployment with:
- * - MySQL/PostgreSQL database support
- * - Railway-specific environment variables
- * - File upload handling for Railway's persistent storage
- * - Email configuration
+ * This configuration automatically detects the environment:
+ * - Railway.com (production)
+ * - Local development (XAMPP)
  * 
  * @version 1.0.0
- * @platform Railway.com
+ * @author MIW Development Team
  */
 
-// Performance and error settings
-set_time_limit(30);
-ini_set('max_execution_time', 30);
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // Production setting
-ini_set('log_errors', 1);
+// Detect environment
+$isRailway = isset($_ENV['RAILWAY_ENVIRONMENT']) || getenv('RAILWAY_ENVIRONMENT');
+$isLocal = !$isRailway;
 
-// Railway Configuration
-$config = [
-    'database' => [
-        // Railway MySQL service configuration
-        'host' => $_ENV['DB_HOST'] ?? $_ENV['MYSQLHOST'] ?? 'mysql.railway.internal',
-        'port' => $_ENV['DB_PORT'] ?? $_ENV['MYSQLPORT'] ?? 3306,
-        'dbname' => $_ENV['DB_NAME'] ?? $_ENV['MYSQLDATABASE'] ?? 'railway',
-        'username' => $_ENV['DB_USER'] ?? $_ENV['MYSQLUSER'] ?? 'root',
-        'password' => $_ENV['DB_PASS'] ?? $_ENV['MYSQLPASSWORD'] ?? '',
-        'charset' => 'utf8mb4',
-        'driver' => 'mysql' // Force MySQL for Railway
-    ],
-    'email' => [
-        'smtp_host' => $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com',
-        'smtp_username' => $_ENV['SMTP_USERNAME'] ?? '',
-        'smtp_password' => $_ENV['SMTP_PASSWORD'] ?? '',
-        'smtp_port' => $_ENV['SMTP_PORT'] ?? 587,
-        'smtp_encryption' => $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
-    ],
-    'upload' => [
-        'max_file_size' => $_ENV['MAX_FILE_SIZE'] ?? '10M',
-        'upload_path' => $_ENV['UPLOAD_PATH'] ?? '/app/uploads/', // Railway persistent storage
-        'allowed_types' => ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx']
-    ],
-    'app' => [
-        'environment' => $_ENV['APP_ENV'] ?? 'production',
-        'max_execution_time' => $_ENV['MAX_EXECUTION_TIME'] ?? 300,
-        'secure_headers' => $_ENV['SECURE_HEADERS'] ?? 'true',
-        'port' => $_ENV['PORT'] ?? 3000, // Railway assigns PORT
+if ($isLocal) {
+    // Load local development configuration
+    require_once __DIR__ . '/config.local.php';
+} else {
+    // Load Railway production configuration
+    require_once __DIR__ . '/config.railway.php';
+}
+
+// Environment-specific debugging
+if ($isLocal && isset($_GET['debug'])) {
+    echo "<div style='background: #f0f0f0; padding: 10px; margin: 10px; border: 1px solid #ccc;'>";
+    echo "<h3>🔧 MIW Configuration Debug</h3>";
+    echo "<p><strong>Environment:</strong> " . ($isRailway ? 'Railway Production' : 'Local Development') . "</p>";
+    echo "<p><strong>Config File:</strong> " . ($isRailway ? 'config.railway.php' : 'config.local.php') . "</p>";
+    echo "<p><strong>Database Host:</strong> " . (defined('DB_HOST') ? DB_HOST : 'Not defined') . "</p>";
+    echo "<p><strong>Upload Path:</strong> " . (defined('UPLOAD_PATH') ? UPLOAD_PATH : 'Not defined') . "</p>";
+    echo "<p><strong>SMTP Host:</strong> " . (defined('SMTP_HOST') ? SMTP_HOST : 'Not defined') . "</p>";
+    echo "<p><strong>PHP Version:</strong> " . PHP_VERSION . "</p>";
+    echo "<p><strong>Current Time:</strong> " . date('Y-m-d H:i:s T') . "</p>";
+    echo "</div>";
+}
+
+?>
         'railway_project_id' => $_ENV['RAILWAY_PROJECT_ID'] ?? '',
         'railway_environment' => $_ENV['RAILWAY_ENVIRONMENT'] ?? 'production'
     ]
@@ -55,8 +44,15 @@ $config = [
 
 // Create database connection
 try {
-    // Force MySQL connection for Railway
-    $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset={$config['database']['charset']}";
+    $driver = $config['database']['driver'];
+    
+    if ($driver === 'mysql') {
+        // MySQL connection for Railway
+        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset={$config['database']['charset']}";
+    } else {
+        // PostgreSQL connection
+        $dsn = "pgsql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']}";
+    }
     
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -68,17 +64,21 @@ try {
     $pdo = new PDO($dsn, $config['database']['username'], $config['database']['password'], $options);
     $conn = $pdo; // Alias for compatibility
     
-    // Set timezone for MySQL
-    $pdo->exec("SET time_zone = '+07:00'"); // Asia/Jakarta
+    // Set timezone
+    if ($driver === 'mysql') {
+        $pdo->exec("SET time_zone = '+07:00'"); // Asia/Jakarta
+    } else {
+        $pdo->exec("SET TIME ZONE 'Asia/Jakarta'");
+    }
     
 } catch (PDOException $e) {
-    error_log("Railway MySQL Connection Error: " . $e->getMessage());
+    error_log("Railway Database Connection Error: " . $e->getMessage());
     
     // For Railway, we might want to fail fast or provide fallback
     if ($config['app']['environment'] === 'production') {
-        die('MySQL connection failed. Please check Railway MySQL service configuration.');
+        die('Database connection failed. Please check Railway service configuration.');
     } else {
-        throw new Exception("MySQL connection failed: " . $e->getMessage());
+        throw new Exception("Database connection failed: " . $e->getMessage());
     }
 }
 
