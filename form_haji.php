@@ -1,5 +1,5 @@
 <?php
-// Database configuration
+// Central configuration - the ONLY dependency
 require_once "config.php";
 require_once 'terbilang.php';
 
@@ -22,6 +22,7 @@ if (isset($_GET['input'])) {
 }
 
 // Fetch Umroh packages with all room types and features
+$packages = []; // Initialize as empty array
 try {
     $stmt = $conn->prepare("SELECT pak_id, program_pilihan, tanggal_keberangkatan, 
                            base_price_quad, base_price_triple, base_price_double
@@ -36,6 +37,7 @@ try {
 } catch (PDOException $e) {
     error_log("Error fetching packages: " . $e->getMessage());
     $errors[] = "Error mengambil data paket. Silakan coba lagi nanti.";
+    $packages = []; // Ensure it's still an array
 }
 
 // Prepare biaya_paket and terbilang values
@@ -256,23 +258,31 @@ if ($biaya_paket_value !== '') {
         <h1>Form Pendaftaran Haji</h1>
     </header>
     <main>
-        <?php if (!empty($errors)): ?>
+        <?php
+if (!empty($errors)): ?>
             <div class="error-message">
                 <h3>Terjadi kesalahan:</h3>
                 <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo htmlspecialchars($error); ?></li>
-                    <?php endforeach; ?>
+                    <?php
+foreach ($errors as $error): ?>
+                        <li><?php
+echo htmlspecialchars($error); ?></li>
+                    <?php
+endforeach; ?>
                 </ul>
             </div>
-        <?php endif; ?>
+        <?php
+endif; ?>
 
-        <?php if ($success): ?>
+        <?php
+if ($success): ?>
             <div class="success-message">
                 <p>Pendaftaran berhasil! Kami akan mengirimkan konfirmasi via email.</p>
             </div>
-        <?php else: ?>
+        <?php
+else: ?>
         <form action="submit_haji.php" method="POST" enctype="multipart/form-data" id="hajiForm">
+    <?php echo CSRFProtection::getHiddenField(); ?>
             <input type="hidden" name="currency" value="USD">
             <input type="hidden" name="jenis_paket" value="Haji">
             <input type="hidden" id="program_pilihan" name="program_pilihan" value="">
@@ -425,9 +435,10 @@ if ($biaya_paket_value !== '') {
             <label for="pak_id">Program Pilihan:</label>
             <select id="pak_id" name="pak_id" required onchange="updateBiaya()">
                 <option value="">-- Pilih Program --</option>
-                <?php foreach ($packages as $package): ?>
+                <?php
+foreach ($packages as $package): ?>
                         <?php
-                        $packageData = [
+$packageData = [
                             'program_pilihan' => $package['program_pilihan'],
                             'tanggal_keberangkatan' => $package['tanggal_keberangkatan'],
                             'base_price_quad' => $package['base_price_quad'],
@@ -437,12 +448,17 @@ if ($biaya_paket_value !== '') {
                         
                         $selected = isset($inputData['pak_id']) && $inputData['pak_id'] == $package['pak_id'] ? 'selected' : '';
                         ?>
-                        <option value="<?php echo $package['pak_id']; ?>" 
-                                data-package='<?php echo json_encode($packageData, JSON_HEX_APOS | JSON_HEX_QUOT); ?>' 
-                                <?php echo $selected; ?>>
-                            <?php echo htmlspecialchars($package['program_pilihan']); ?>
+                        <option value="<?php
+echo $package['pak_id']; ?>" 
+                                data-package='<?php
+echo json_encode($packageData, JSON_HEX_APOS | JSON_HEX_QUOT); ?>' 
+                                <?php
+echo $selected; ?>>
+                            <?php
+echo htmlspecialchars($package['program_pilihan']); ?>
                         </option>
-                    <?php endforeach; ?></select>
+                    <?php
+endforeach; ?></select>
             </select>
 
             <label for="tanggal_keberangkatan">Tanggal Keberangkatan:</label>
@@ -459,8 +475,10 @@ if ($biaya_paket_value !== '') {
             <label for="payment_type">Keterangan Pembayaran:</label>
             <select id="payment_type" name="payment_type" required>
                 <option value="">-- Pilih Keterangan --</option>
-                <option value="DP" <?php echo (isset($inputData['payment_type']) && $inputData['payment_type'] === 'DP') ? 'selected' : ''; ?>>DP (Down Payment)</option>
-                <option value="Pelunasan" <?php echo (isset($inputData['payment_type']) && $inputData['payment_type'] === 'Pelunasan') ? 'selected' : ''; ?>>Lunas (Full Payment)</option>
+                <option value="DP" <?php
+echo (isset($inputData['payment_type']) && $inputData['payment_type'] === 'DP') ? 'selected' : ''; ?>>DP (Down Payment)</option>
+                <option value="Pelunasan" <?php
+echo (isset($inputData['payment_type']) && $inputData['payment_type'] === 'Pelunasan') ? 'selected' : ''; ?>>Lunas (Full Payment)</option>
             </select>
 
             <input type="hidden" id="payment_method" name="payment_method" value="BSI">
@@ -493,7 +511,8 @@ if ($biaya_paket_value !== '') {
 
             <button type="submit">Daftar</button>
         </form>
-        <?php endif; ?>
+        <?php
+endif; ?>
     </main>
 </body>
 </html>

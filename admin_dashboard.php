@@ -1,6 +1,9 @@
 <?php
 require_once 'config.php';
 
+// Require admin authentication
+AdminAuth::requireAuth();
+
 // Function to delete jamaah and related data
 function deleteJamaahAndRelatedData($nik, $pdo) {
     try {
@@ -93,8 +96,13 @@ if (isset($_GET['nik']) && !empty($_GET['nik']) && isset($_SERVER['HTTP_X_REQUES
 }
 
 // Get total count of jamaah
-$stmt = $pdo->query("SELECT COUNT(*) as total FROM data_jamaah");
-$total_jamaah = $stmt->fetch()['total'];
+try {
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM data_jamaah");
+    $total_jamaah = $stmt->fetch()['total'];
+} catch (PDOException $e) {
+    $total_jamaah = 0;
+    error_log("Database table not found: " . $e->getMessage());
+}
 
 // Get verified payments
 $stmt = $pdo->query("

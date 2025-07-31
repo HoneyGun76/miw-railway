@@ -1,4 +1,11 @@
 <?php
+require_once 'csrf_protection.php';
+require_once 'admin_auth.php';
+require_once 'safe_config.php';
+
+// Require admin authentication
+AdminAuth::requireAuth();
+
 require_once 'config.php';
 require_once 'email_functions.php';
 require_once 'terbilang.php';

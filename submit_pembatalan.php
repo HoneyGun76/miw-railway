@@ -1,7 +1,13 @@
 <?php
 require_once 'config.php';
-require_once 'email_functions.php';
-require_once 'upload_handler.php';
+
+// CSRF Protection - must be first
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+        header('Location: form_pembatalan.php?error=' . urlencode('Invalid security token. Please try again.'));
+        exit;
+    }
+}
 
 function insertCancellationData($inputData, $kwitansiPath, $proofPath) {
     global $conn;
@@ -38,13 +44,13 @@ $response = [
     'input' => []
 ];
 
-// Collect form data
+// Collect and sanitize form data
 $inputData = [
-    'nik' => trim($_POST['nik'] ?? ''),
-    'nama' => trim($_POST['nama'] ?? ''),
-    'no_telp' => trim($_POST['no_telp'] ?? ''),
-    'email' => trim($_POST['email'] ?? ''),
-    'alasan' => trim($_POST['alasan'] ?? '')
+    'nik' => InputValidator::sanitizeString(trim($_POST['nik'] ?? '')),
+    'nama' => InputValidator::sanitizeString(trim($_POST['nama'] ?? '')),
+    'no_telp' => InputValidator::sanitizeString(trim($_POST['no_telp'] ?? '')),
+    'email' => InputValidator::sanitizeEmail(trim($_POST['email'] ?? '')),
+    'alasan' => InputValidator::sanitizeString(trim($_POST['alasan'] ?? ''))
 ];
 
 // Validate required fields and data

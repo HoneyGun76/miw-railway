@@ -1,6 +1,8 @@
 <?php
-require_once "config.php";
-require_once "paket_functions.php";
+require_once 'config.php';
+
+// Require admin authentication
+AdminAuth::requireAuth();
 
 // Handle CRUD operations
 handlePackageOperations($conn);

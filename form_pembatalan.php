@@ -80,6 +80,7 @@ $success = isset($_GET['success']) ? $_GET['success'] : null;
     </header>
     <main>
         <form action="submit_pembatalan.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <?php echo CSRFProtection::getHiddenField(); ?>
             <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
             <div class="cancellation-policy">
                 <h2>Kebijakan Pembatalan Madinah Iman Wisata</h2>
@@ -181,19 +182,24 @@ $success = isset($_GET['success']) ? $_GET['success'] : null;
 
             <h3>Data Jamaah</h3>
             <label for="nik">NIK:</label>
-            <input type="text" id="nik" name="nik" value="<?php echo isset($inputData['nik']) ? $inputData['nik'] : ''; ?>" required maxlength="16">
+            <input type="text" id="nik" name="nik" value="<?php
+echo isset($inputData['nik']) ? $inputData['nik'] : ''; ?>" required maxlength="16">
 
             <label for="nama">Nama Lengkap:</label>
-            <input type="text" id="nama" name="nama" value="<?php echo isset($inputData['nama']) ? $inputData['nama'] : ''; ?>" required>
+            <input type="text" id="nama" name="nama" value="<?php
+echo isset($inputData['nama']) ? $inputData['nama'] : ''; ?>" required>
 
             <label for="no_telp">No. Telepon/HP:</label>
-            <input type="text" id="no_telp" name="no_telp" value="<?php echo isset($inputData['no_telp']) ? $inputData['no_telp'] : ''; ?>" required>
+            <input type="text" id="no_telp" name="no_telp" value="<?php
+echo isset($inputData['no_telp']) ? $inputData['no_telp'] : ''; ?>" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo isset($inputData['email']) ? $inputData['email'] : ''; ?>" required>
+            <input type="email" id="email" name="email" value="<?php
+echo isset($inputData['email']) ? $inputData['email'] : ''; ?>" required>
 
             <label for="alasan">Alasan Pembatalan:</label>
-            <textarea id="alasan" name="alasan"><?php echo isset($inputData['alasan']) ? $inputData['alasan'] : ''; ?></textarea>
+            <textarea id="alasan" name="alasan"><?php
+echo isset($inputData['alasan']) ? $inputData['alasan'] : ''; ?></textarea>
 
             <h3>Upload Dokumen</h3>
             <label for="kwitansi_path">Kwitansi Pembayaran (max 2MB):</label>

@@ -1,8 +1,6 @@
 <?php
 // submit_umroh.php
-
 require_once 'config.php';
-require_once 'email_functions.php';
 
 // Initialize response variables
 $errors = [];
@@ -122,10 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'type_room_pilihan' => $_POST['type_room_pilihan'],
                 'created_at' => $currentDateTime,
                 'updated_at' => $currentDateTime,
-                // Set upload timestamps for files (even though we're not saving them to server)
-                'kk_path' => isset($_FILES['kk_path']) ? $currentDateTime : null,
-                'ktp_path' => isset($_FILES['ktp_path']) ? $currentDateTime : null,
-                'paspor_path' => isset($uploadedFiles['paspor_path']) ? $currentDateTime : null,
+                // File paths from upload handler
                 'kk_path' => $uploadedFiles['kk_path'] ?? null,
                 'ktp_path' => $uploadedFiles['ktp_path'] ?? null,
                 'paspor_path' => $uploadedFiles['paspor_path'] ?? null,
@@ -172,28 +167,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->rollBack();
         $errorMsg = "Database error: " . $e->getMessage();
         $errors[] = $errorMsg;
-        
-        // Log detailed error information
-        logError('database_error', $errorMsg, [
-            'file' => 'submit_umroh.php',
-            'nik' => $_POST['nik'] ?? 'unknown',
-            'pak_id' => $_POST['pak_id'] ?? 'unknown',
-            'tinggi_badan' => $_POST['tinggi_badan'] ?? 'empty',
-            'berat_badan' => $_POST['berat_badan'] ?? 'empty'
-        ]);
-        
         error_log("Database error in submit_umroh.php: " . $e->getMessage());
     } catch (Exception $e) {
         $conn->rollBack();
         $errorMsg = $e->getMessage();
         $errors[] = $errorMsg;
-        
-        // Log general error
-        logError('general_error', $errorMsg, [
-            'file' => 'submit_umroh.php',
-            'nik' => $_POST['nik'] ?? 'unknown'
-        ]);
-        
         error_log("Error in submit_umroh.php: " . $e->getMessage());
     }
 }

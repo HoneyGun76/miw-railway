@@ -1,152 +1,116 @@
 <?php
 /**
- * Railway.com Configuration for MIW Travel System
+ * MIW Travel System - Central Configuration
  * 
- * This configuration is optimized for Railway deployment with:
- * - MySQL/PostgreSQL database support
- * - Railway-specific environment variables
- * - File upload handling for Railway's persistent storage
- * - Email configuration
+ * This is the ONLY configuration file for database connections.
+ * Simple, clean, and handles both Railway production and local development.
  * 
  * @version 1.0.0
- * @platform Railway.com
  */
 
-// Performance and error settings
-set_time_limit(30);
-ini_set('max_execution_time', 30);
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // Production setting
-ini_set('log_errors', 1);
+// Environment detection  
+$isRailway = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty($_ENV['RAILWAY_PROJECT_ID']);
+$isLocal = !$isRailway;
 
-// Railway Configuration
-$config = [
-    'database' => [
-        // Railway typically provides these via service linking
-        'host' => $_ENV['DB_HOST'] ?? $_ENV['MYSQL_HOST'] ?? $_ENV['PGHOST'] ?? 'localhost',
-        'port' => $_ENV['DB_PORT'] ?? $_ENV['MYSQL_PORT'] ?? $_ENV['PGPORT'] ?? 3306,
-        'dbname' => $_ENV['DB_NAME'] ?? $_ENV['MYSQL_DATABASE'] ?? $_ENV['PGDATABASE'] ?? 'miw_db',
-        'username' => $_ENV['DB_USER'] ?? $_ENV['MYSQL_USER'] ?? $_ENV['PGUSER'] ?? 'root',
-        'password' => $_ENV['DB_PASS'] ?? $_ENV['MYSQL_PASSWORD'] ?? $_ENV['PGPASSWORD'] ?? '',
-        'charset' => 'utf8mb4',
-        'driver' => $_ENV['DB_DRIVER'] ?? 'mysql' // Railway supports both MySQL and PostgreSQL
-    ],
-    'email' => [
-        'smtp_host' => $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com',
-        'smtp_username' => $_ENV['SMTP_USERNAME'] ?? '',
-        'smtp_password' => $_ENV['SMTP_PASSWORD'] ?? '',
-        'smtp_port' => $_ENV['SMTP_PORT'] ?? 587,
-        'smtp_encryption' => $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
-    ],
-    'upload' => [
-        'max_file_size' => $_ENV['MAX_FILE_SIZE'] ?? '10M',
-        'upload_path' => $_ENV['UPLOAD_PATH'] ?? '/app/uploads/', // Railway persistent storage
-        'allowed_types' => ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx']
-    ],
-    'app' => [
-        'environment' => $_ENV['APP_ENV'] ?? 'production',
-        'max_execution_time' => $_ENV['MAX_EXECUTION_TIME'] ?? 300,
-        'secure_headers' => $_ENV['SECURE_HEADERS'] ?? 'true',
-        'port' => $_ENV['PORT'] ?? 3000, // Railway assigns PORT
-        'railway_project_id' => $_ENV['RAILWAY_PROJECT_ID'] ?? '',
-        'railway_environment' => $_ENV['RAILWAY_ENVIRONMENT'] ?? 'production'
-    ]
-];
+// Database configuration
+$host = $isRailway 
+    ? ($_ENV['MYSQLHOST'] ?? 'mysql.railway.internal')
+    : 'localhost';
+    
+$port = $isRailway 
+    ? ($_ENV['MYSQLPORT'] ?? 3306)
+    : 3306;
+    
+$dbname = $isRailway 
+    ? ($_ENV['MYSQLDATABASE'] ?? 'railway') 
+    : 'miw_db';
+    
+$username = $isRailway 
+    ? ($_ENV['MYSQLUSER'] ?? 'root')
+    : 'root';
+    
+$password = $isRailway 
+    ? ($_ENV['MYSQLPASSWORD'] ?? '')
+    : '';
 
 // Create database connection
+$conn = null;
+$pdo = null;
+
 try {
-    $driver = $config['database']['driver'];
-    
-    if ($driver === 'mysql') {
-        // MySQL connection for Railway
-        $dsn = "mysql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']};charset={$config['database']['charset']}";
-    } else {
-        // PostgreSQL connection
-        $dsn = "pgsql:host={$config['database']['host']};port={$config['database']['port']};dbname={$config['database']['dbname']}";
-    }
+    $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
     
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::ATTR_PERSISTENT => false
+        PDO::ATTR_EMULATE_PREPARES => false
     ];
     
-    $pdo = new PDO($dsn, $config['database']['username'], $config['database']['password'], $options);
-    $conn = $pdo; // Alias for compatibility
+    $pdo = new PDO($dsn, $username, $password, $options);
+    $conn = $pdo; // Legacy compatibility
     
     // Set timezone
-    if ($driver === 'mysql') {
-        $pdo->exec("SET time_zone = '+07:00'"); // Asia/Jakarta
-    } else {
-        $pdo->exec("SET TIME ZONE 'Asia/Jakarta'");
-    }
+    $pdo->exec("SET time_zone = '+07:00'");
     
 } catch (PDOException $e) {
-    error_log("Railway Database Connection Error: " . $e->getMessage());
-    
-    // For Railway, we might want to fail fast or provide fallback
-    if ($config['app']['environment'] === 'production') {
-        die('Database connection failed. Please check Railway service configuration.');
-    } else {
-        throw new Exception("Database connection failed: " . $e->getMessage());
-    }
+    error_log("Database Connection Error: " . $e->getMessage());
+    $conn = null;
+    $pdo = null;
 }
 
-// Email settings
-define('SMTP_HOST', $config['email']['smtp_host']);
-define('SMTP_PORT', $config['email']['smtp_port']);
-define('SMTP_USERNAME', $config['email']['smtp_username']);
-define('SMTP_PASSWORD', $config['email']['smtp_password']);
-define('SMTP_ENCRYPTION', $config['email']['smtp_encryption']);
+// Basic constants
+define('UPLOAD_PATH', $isRailway ? '/app/uploads/' : __DIR__ . '/uploads/');
+define('IS_RAILWAY', $isRailway);
+define('IS_LOCAL', $isLocal);
 
-define('EMAIL_FROM', $config['email']['smtp_username']);
-define('EMAIL_FROM_NAME', 'MIW Travel');
-define('EMAIL_SUBJECT', 'Pendaftaran Umroh/Haji Anda');
-define('ADMIN_EMAIL', $config['email']['smtp_username']);
-define('EMAIL_ENABLED', true);
-
-// File upload settings
-define('MAX_FILE_SIZE', $config['upload']['max_file_size']);
-define('MAX_EXECUTION_TIME', $config['app']['max_execution_time']);
-define('UPLOAD_PATH', $config['upload']['upload_path']);
-
-// Apply execution time settings
-ini_set('max_execution_time', MAX_EXECUTION_TIME);
-date_default_timezone_set('Asia/Jakarta');
-
-// Start session
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Security headers for production
-if ($config['app']['secure_headers'] === 'true') {
-    header('X-Content-Type-Options: nosniff');
-    header('X-Frame-Options: SAMEORIGIN');
-    header('X-XSS-Protection: 1; mode=block');
-    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
-}
-
-// Railway-specific environment detection
-function isRailwayEnvironment() {
-    return !empty($_ENV['RAILWAY_ENVIRONMENT']) || 
-           !empty($_ENV['RAILWAY_PROJECT_ID']) || 
-           !empty(getenv('RAILWAY_ENVIRONMENT'));
-}
-
-// Create upload directories if they don't exist (Railway persistent storage)
+// Create upload directories if they don't exist  
 $uploadDirs = [
-    rtrim(UPLOAD_PATH, '/') . '/documents',
-    rtrim(UPLOAD_PATH, '/') . '/payments',
-    rtrim(UPLOAD_PATH, '/') . '/cancellations',
-    rtrim(UPLOAD_PATH, '/') . '/photos'
+    UPLOAD_PATH . 'documents',
+    UPLOAD_PATH . 'payments', 
+    UPLOAD_PATH . 'cancellations'
 ];
 
 foreach ($uploadDirs as $dir) {
     if (!file_exists($dir)) {
-        mkdir($dir, 0755, true);
+        @mkdir($dir, 0755, true);
     }
+}
+
+// Session handling
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Timezone
+date_default_timezone_set('Asia/Jakarta');
+
+// Simple CSRF Protection
+function generateCSRFToken() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function validateCSRFToken($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+// Simple input sanitization
+function sanitizeInput($input) {
+    if (is_string($input)) {
+        return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+    }
+    return $input;
+}
+
+// Error logging function
+function logError($message, $context = []) {
+    $logMessage = "[" . date('Y-m-d H:i:s') . "] " . $message;
+    if (!empty($context)) {
+        $logMessage .= " | Context: " . json_encode($context);
+    }
+    error_log($logMessage);
 }
 
 ?>

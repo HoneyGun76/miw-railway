@@ -1,4 +1,11 @@
 <?php
+require_once 'csrf_protection.php';
+require_once 'admin_auth.php';
+require_once 'safe_config.php';
+
+// Require admin authentication
+AdminAuth::requireAuth();
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="row mt-3">

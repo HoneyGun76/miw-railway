@@ -1,14 +1,24 @@
 <?php
 // submit_haji.php
-
 require_once 'config.php';
-require_once 'email_functions.php';
 
 // Initialize response variables
 $errors = [];
 $success = false;
 
 // Check if form is submitted
+
+// Security validation
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!CSRFProtection::validateToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        die('Security validation failed');
+    }
+    
+    // Sanitize input data
+    $_POST = InputValidator::sanitizeArray($_POST);
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Validate required fields for Haji registration
