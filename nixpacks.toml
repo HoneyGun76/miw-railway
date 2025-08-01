@@ -7,8 +7,8 @@ nixPkgs = ["php81", "php81Packages.composer"]
 [phases.install]
 cmds = [
     "rm -rf vendor",
-    "composer install --no-dev --optimize-autoloader",
-    "composer dump-autoload --optimize"
+    "composer install --no-dev --optimize-autoloader --no-cache",
+    "composer dump-autoload --optimize --no-cache"
 ]
 
 [phases.build]
