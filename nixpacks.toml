@@ -7,11 +7,10 @@ nixLibs = ["php82"]
 
 [variables]
 PHP_VERSION = "8.2"
-NIXPACKS_INSTALL_CMD = "composer install --no-dev --optimize-autoloader --no-cache"
 
 [phases.install]
 cmds = [
-    "rm -rf vendor",
+    "rm -rf vendor/",
     "composer install --no-dev --optimize-autoloader --no-cache",
     "composer dump-autoload --optimize --no-cache"
 ]
@@ -24,6 +23,3 @@ cmds = [
     "mkdir -p /tmp/miw_uploads/cancellations",
     "chmod -R 777 /tmp/miw_uploads"
 ]
-
-[variables]
-PORT = "3000"
