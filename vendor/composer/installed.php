@@ -3,11 +3,11 @@
         'name' => 'miw/travel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a4778e55d76f23f4fb0cd26284ae241864713f9c',
+        'reference' => 'ed629df0798e7eb2501a00d2eeb7db2ebf1ff5ee',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'composer/pcre' => array(
@@ -103,7 +103,7 @@
         'miw/travel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a4778e55d76f23f4fb0cd26284ae241864713f9c',
+            'reference' => 'ed629df0798e7eb2501a00d2eeb7db2ebf1ff5ee',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

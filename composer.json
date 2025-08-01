@@ -18,10 +18,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "mkdir -p /tmp/miw_uploads/documents",
-            "mkdir -p /tmp/miw_uploads/payments", 
-            "mkdir -p /tmp/miw_uploads/photos",
-            "chmod -R 777 /tmp/miw_uploads"
+            "@php -r \"if (!is_dir('/tmp/miw_uploads')) mkdir('/tmp/miw_uploads', 0777, true);\"",
+            "@php -r \"if (!is_dir('/tmp/miw_uploads/documents')) mkdir('/tmp/miw_uploads/documents', 0777, true);\"",
+            "@php -r \"if (!is_dir('/tmp/miw_uploads/payments')) mkdir('/tmp/miw_uploads/payments', 0777, true);\"",
+            "@php -r \"if (!is_dir('/tmp/miw_uploads/photos')) mkdir('/tmp/miw_uploads/photos', 0777, true);\""
         ]
     }
 }
