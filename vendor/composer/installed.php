@@ -3,7 +3,7 @@
         'name' => 'miw/travel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a5acfb7ee1d7973e650a6adf818a90967a2f807b',
+        'reference' => 'bb10c279e0c4c65ba7ed78c6ed4a9b78c8badfea',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -103,7 +103,7 @@
         'miw/travel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a5acfb7ee1d7973e650a6adf818a90967a2f807b',
+            'reference' => 'bb10c279e0c4c65ba7ed78c6ed4a9b78c8badfea',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
