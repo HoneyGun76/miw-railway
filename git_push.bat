@@ -1,33 +1,40 @@
 @echo off
-echo ============================================
-echo MIW Railway - Git Sync & Force Push Script
-echo ============================================
+echo ========================================
+echo   MIW Railway - Git Push (Both Ends)
+echo ========================================
 echo.
 
-echo [1/5] Removing deleted files from git tracking...
-git add -A
-echo Done.
-echo.
+echo Staging changes...
+git add .
 
-echo [2/5] Checking what will be committed...
-git status --short
 echo.
-
-echo [3/5] Enter your commit message:
+echo Enter your commit message:
 set /p commit_msg="> "
 
 echo.
-echo [4/5] Committing all changes (including deletions)...
+echo Committing changes...
 git commit -m "%commit_msg%"
 
 echo.
-echo [5/5] Force pushing to Railway (this will sync deletions)...
-git push origin main --force
+echo =====================================
+echo   Pushing to Railway Deployment
+echo =====================================
+call push_railway.bat
 
 echo.
-echo ✅ SUCCESS: Repository synced with local directory!
-echo 🗑️  Deleted files have been removed from git repository
-echo 🚀 Your changes are now live on Railway
+echo =====================================
+echo   Pushing to GitHub Repository  
+echo =====================================
+call push_github.bat
+
+echo.
+echo ========================================
+echo   All push operations completed!
+echo ========================================
+echo.
+echo ✅ Railway: Live deployment updated
+echo ✅ GitHub: Repository synchronized
+echo.
 echo 📊 Access diagnostic dashboard at your Railway URL + /diagnostic.php
 echo.
 pause
