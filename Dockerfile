@@ -20,7 +20,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /app
 
-# Copy composer files
+# Copy composer files first
 COPY composer.json composer.lock ./
 
 # Install PHP dependencies
@@ -28,6 +28,10 @@ RUN composer install --no-dev --optimize-autoloader --no-cache
 
 # Copy application code
 COPY . .
+
+# Ensure vendor directory is properly owned and regenerate autoloader
+RUN chown -R www-data:www-data /app/vendor
+RUN composer dump-autoload --optimize --no-cache
 
 # Create upload directories
 RUN mkdir -p /tmp/miw_uploads/documents \
